@@ -9,13 +9,13 @@
 	// UMD wrapper
 	if ( typeof define === 'function' && define.amd ) {
 		// AMD
-		define( [ 'underscore', 'backbone', 'jquery' ], factory );
+		define( [ 'underscore', 'backbone.giraffe', 'jquery' ], factory );
 	} else if ( typeof exports !== 'undefined' ) {
 		// Node/CommonJS
-		module.exports = factory( require('underscore' ), require( 'backbone' ), require( 'backbone' ).$ );
+		module.exports = factory( require('underscore' ), require( 'backbone.giraffe' ), require( 'backbone.giraffe' ).$ );
 	} else {
 		// Browser globals
-		factory( root._, root.Backbone, ( root.jQuery || root.Zepto || root.$ ) );
+		factory( root._, root.Giraffe, ( root.jQuery || root.Zepto || root.$ ) );
 	}
 }( this, function( _, Backbone, $ ) {
 	var mDefaultModelViewConstructor = Backbone.View;
@@ -49,7 +49,7 @@
 
 		//only used if Backbone.Courier is available
 		passMessages : { "*" : "." },
-		
+
 		// viewOption definitions with default values.
 		initializationOptions : [
 			{ "collection" : new Backbone.Collection() },
@@ -141,7 +141,7 @@
 				}
 				if( _.contains( kOptionsRequiringRerendering, changedOptionKey ) ) rerender = true;
 			});
-			if( this._hasBeenRendered && rerender ) { 
+			if( this._hasBeenRendered && rerender ) {
 				this.render(); // Rerender the view if the rerender flag has been set.
 			}
 		},
@@ -387,7 +387,7 @@
 						$emptyListCaptionEl = $varEl.wrapAll( "<li class='not-sortable'></li>" ).parent().css( kStylesForEmptyListCaption );
 					else
 						$emptyListCaptionEl = $varEl.wrapAll( "<tr class='not-sortable'><td></td></tr>" ).parent().parent().css( kStylesForEmptyListCaption );
-					
+
 					this._getContainerEl().append( $emptyListCaptionEl );
 				}
 			}
@@ -400,7 +400,7 @@
 				this._getContainerEl().find( "> tr > td > var.empty-list-caption" ).parent().parent().remove();
 		},
 
-		// Render a single model view in container object "parentElOrDocumentFragment", which is either 
+		// Render a single model view in container object "parentElOrDocumentFragment", which is either
 		// a documentFragment or a jquery object. optional arg atIndex is not support for document fragments.
 		_insertAndRenderModelView : function( modelView, parentElOrDocumentFragment, atIndex ) {
 			var thisModelViewWrapped = this._wrapModelView( modelView );
@@ -426,7 +426,7 @@
 				thisModelViewWrapped.hide();
 				thisModelViewWrapped.addClass( "not-visible" );
 			}
-			
+
 			var hideThisModelView = false;
 			if( _.isFunction( this.visibleModelsFilter ) ) {
 				hideThisModelView = ! this.visibleModelsFilter( modelView.model );
@@ -791,7 +791,7 @@
 			var modelBeingSorted = this.collection.get( ui.item.attr( "data-model-cid" ) );
 			var modelViewContainerEl = this._getContainerEl();
 			var newIndex = modelViewContainerEl.children().index( ui.item );
-			
+
 			if( newIndex == -1 && modelBeingSorted ) {
 				// the element was removed from this list. can happen if this sortable is connected
 				// to another sortable, and the item was dropped into the other sortable.
@@ -969,12 +969,12 @@
 	 */
 
 	Backbone.ViewOptions = {};
-		
+
 	Backbone.ViewOptions.add = function( view, optionsDeclarationsProperty ) {
 		if( _.isUndefined( optionsDeclarationsProperty ) ) optionsDeclarationsProperty = "options";
-		
-		// ****************** Public methods added to view ****************** 
-		
+
+		// ****************** Public methods added to view ******************
+
 		view.setOptions = function( options ) {
 			var _this = this;
 			var optionsThatWereChanged = {};
@@ -989,9 +989,9 @@
 					thisOptionName = thisOptionDeclaration.name;
 					thisOptionRequired = thisOptionDeclaration.required;
 					thisOptionDefaultValue = thisOptionDeclaration.defaultValue;
-					
+
 					if( thisOptionRequired ) {
-						// note we do not throw an error if a required option is not supplied, but it is  
+						// note we do not throw an error if a required option is not supplied, but it is
 						// found on the object itself (due to a prior call of view.setOptions, most likely)
 						if( ! options ||
 						    ( ( ! _.contains( _.keys( options ), thisOptionName ) && _.isUndefined( _this[ thisOptionName ] ) ) ) ||
@@ -1031,12 +1031,12 @@
 
 			var normalizedOptionDeclarations = _normalizeOptionDeclarations( optionDeclarations );
 			var optionsNames = _.pluck( normalizedOptionDeclarations, "name" );
-				
+
 			return _.pick( this, optionsNames );
 		};
 	};
-	
-	// ****************** Private Utility Functions ****************** 
+
+	// ****************** Private Utility Functions ******************
 
 	function _normalizeOptionDeclarations( optionDeclarations ) {
 		// convert our short-hand option syntax (with exclamation marks, etc.)
